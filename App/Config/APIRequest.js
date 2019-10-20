@@ -20,6 +20,7 @@ const APIRequest = {
       }
       parameters = queryString.stringify(parameters);
       console.log('Searching using parameters: ' + parameters);
+      console.log('Searching for term: ' + searchTerm);
 
       let response = await fetch(AppConfig.articleSearch + '?' + parameters);
       let responseJson = await response.json();

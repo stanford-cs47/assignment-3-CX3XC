@@ -8,12 +8,27 @@
 */
 
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { StyleSheet, 
+  Text, 
+  View, 
+  SafeAreaView, 
+  Image, 
+  Dimensions,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
+
+//import { List, ListItem, } from 'react-native-elements'
 import { Images, Colors } from './App/Themes'
 import APIRequest from './App/Config/APIRequest'
 
 import News from './App/Components/News'
 import Search from './App/Components/Search'
+
+//Third Party Components
+import { FontAwesome } from '@expo/vector-icons'; 
 
 export default class App extends React.Component {
 
@@ -25,9 +40,32 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    this.loadArticles();
+  }
 
-    //uncomment this to run an API query!
-    //this.loadArticles();
+  onChangeText = text => {
+      this.setState({searchText: text});
+  }
+
+  searchNews = () => {
+    this.loadArticles(this.state.searchText);
+  }
+
+  articleRender = () => {
+    if (this.state.loading) {  
+      return (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+         <ActivityIndicator style={styles.activityIndicator} size='large' color='black'/>
+        </View>
+      )
+    }
+    else {
+      return (
+        <View style={{flex: 1}}>
+         <News feed={this.state.articles}/>
+        </View>
+      )
+    }
   }
 
   async loadArticles(searchTerm = '', category = '') {
@@ -48,13 +86,14 @@ export default class App extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
 
-        <Text style={{textAlign: 'center'}}>Have fun! :) {"\n"} Start by changing the API Key in "./App/Config/AppConfig.js" {"\n"} Then, take a look at the following components: {"\n"} NavigationButtons {"\n"} Search {"\n"} News {"\n"} 🔥</Text>
+        <Image style={styles.logo} source={Images.logo} resizemode='contain'/>
 
-        {/*First, you'll need a logo*/}
+        <Search
+          onChangeText={text => this.onChangeText(text)}
+          loadFeed={() => this.searchNews()}
+        />
 
-        {/*Then your search bar*/}
-
-        {/*And some news*/}
+        {this.articleRender()}
 
         {/*Though, you can style and organize these however you want! power to you 😎*/}
 
@@ -69,7 +108,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center'
-  }
+  },
+
+  logo: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    width: '100%',
+    height: (Dimensions.get('window').width) / 5.1,
+  },
+
+  activityIndicator: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
 });

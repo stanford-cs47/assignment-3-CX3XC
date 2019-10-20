@@ -13,21 +13,59 @@ import { StyleSheet, View, Button, TextInput, TouchableOpacity } from 'react-nat
 import { FontAwesome } from '@expo/vector-icons';
 import { Metrics, Colors } from '../Themes'
 
+//export default function instead of class
+export default function Search(props) {
 
-export default class Search extends Component {
+      search = () => {
+        props.loadFeed();
+        this.searchbar.clear();
+      }
 
-  render () {
     return (
-      <View> {/*Some styles with a fancy background and padding...*/}
 
-        {/*user input and a search button!*/}
+      <View style={styles.searchRow}>
+
+
+        <TextInput
+          ref={(component) => {this.searchbar = component;}}
+          style={styles.textinput}
+          placeholder="Search for News"
+          onChangeText={text => props.onChangeText(text)}
+          onSubmitEditing={this.search}
+        />
+
+          <TouchableOpacity 
+            style={{alignItems: 'flex-end', justifyContent: 'center', width: '15%'}}
+            onPress={props.loadFeed}
+          >
+            <FontAwesome
+            style={{ paddingRight: 5, }}
+            name='search'
+            size={25}
+            color='#FF6699'
+            />
+          </TouchableOpacity>
 
       </View>
+
     );
-  }
+
 }
 
-
 const styles = StyleSheet.create({
+	searchRow: {
+    	flexDirection: 'row',
+    	justifyContent: 'flex-start',
+   		alignItems: 'center',
+    	width: '92%',
+    	borderRadius: 10,
+    	backgroundColor: '#F0EEEE',
+  	},
 
+  	textinput: {
+   		height: 40,
+    	width: '85%',
+      paddingLeft: 10,
+    	textAlign: 'left',
+  	},
 });
